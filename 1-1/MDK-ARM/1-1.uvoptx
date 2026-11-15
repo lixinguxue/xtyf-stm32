@@ -22,7 +22,7 @@
   </DaveTm>
 
   <Target>
-    <TargetName>Template_Project</TargetName>
+    <TargetName>1-1</TargetName>
     <ToolsetNumber>0x4</ToolsetNumber>
     <ToolsetName>ARM-ADS</ToolsetName>
     <TargetOption>
