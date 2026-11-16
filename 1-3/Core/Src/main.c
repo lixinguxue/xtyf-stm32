@@ -28,7 +28,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   uint32_t current = HAL_GetTick();
   if (GPIO_Pin == GPIO_PIN_0)
   {
-    if (current - last >= 40)
+    if (current - last >= 50)
     {
 		if (HAL_GPIO_ReadPin(Key_GPIO_Port,Key_Pin) == GPIO_PIN_RESET)
 		{	
