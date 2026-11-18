@@ -13,9 +13,10 @@
             ],
             "defines": [
                 "USE_HAL_DRIVER",
-                "STM32F103xB"
+                "STM32F103xB",
+                "__CC_ARM"
             ],
-            "compilerPath": "",
+            "compilerPath": "D:/keil5/ARM/ARMCLANG/bin/armclang.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-arm"

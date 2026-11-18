@@ -41,7 +41,8 @@ extern TIM_HandleTypeDef htim2;
 void MX_TIM2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void KEY_Tick(void);
+void LED_Tick(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

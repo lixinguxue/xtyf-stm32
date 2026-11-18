@@ -44,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-volatile uint8_t c;
+volatile uint8_t KEY_Flag[8];          //0:HOLD   1:DOWN   2:UP   3:danjji    4:changan
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -55,22 +55,17 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  static uint32_t l = 0;
-  uint32_t ca = HAL_GetTick();
-  if (GPIO_Pin == GPIO_PIN_0 && ca - l > 25)
-  {
-   l=ca; 
-   c=1;
-  }
-}
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM2)
   {
-    HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+    KEY_Tick();
+    if (KEY_Flag[4])
+    {
+      LED_Tick();
+    }
   }
+
 }
 /* USER CODE END 0 */
 
@@ -105,40 +100,20 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    uint32_t tem = 0;
-    if (c==1) 
+    if (KEY_Flag[3] == 1)
     {
-      tem = HAL_GetTick();
-      while (HAL_GetTick() - tem <1000)
+      if (KEY_Flag[4] == 0)
       {
-        if (HAL_GPIO_ReadPin(KEY_GPIO_Port,KEY_Pin) == GPIO_PIN_SET)
-        {
-          HAL_TIM_Base_Stop_IT(&htim2);
-          HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-          c=2;
-          break;
-        }
+        HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
       }
-          if (c != 2 && HAL_GPIO_ReadPin(KEY_GPIO_Port,KEY_Pin) == GPIO_PIN_RESET)
-          {
-            if (HAL_TIM_Base_GetState(&htim2) == HAL_TIM_STATE_BUSY)
-            {
-              HAL_TIM_Base_Stop_IT(&htim2);
-            }
-            else 
-            {
-              HAL_TIM_Base_Start_IT(&htim2);
-            }
-          }
-        
-     c=0;
-      
+      KEY_Flag[3] = 0;
     }
     /* USER CODE END WHILE */
 

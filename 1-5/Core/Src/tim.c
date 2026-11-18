@@ -21,7 +21,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-
+extern uint8_t KEY_Flag[8];
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
@@ -43,7 +43,7 @@ void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 7200;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 2000;
+  htim2.Init.Period = 10;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -107,6 +107,76 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void KEY_Tick(void) 
+{
+  static uint8_t con = 0;
+  static uint8_t pre = 0;
+  static uint8_t cur = 0;
+  static uint8_t s = 0;
+  static uint16_t tim;
+  if (tim >0)
+  {
+    tim--;
+  }
+  con ++;
+  if (con > 20)
+  {
+    pre = cur;
+    cur = HAL_GPIO_ReadPin(KEY_GPIO_Port,KEY_Pin);
+    if (pre == GPIO_PIN_SET && cur == GPIO_PIN_RESET)
+    {
+      KEY_Flag[1] = 1;
+    }
+    if (pre == GPIO_PIN_RESET && cur == GPIO_PIN_SET)
+    {
+      KEY_Flag[2] = 1;
+    }
+    if (cur == GPIO_PIN_RESET)
+    {
+      KEY_Flag[0] = 1;
+    }
+    else
+    {
+      KEY_Flag[0] = 0;
+    }
+    con = 0;
+    if (s == 0)
+    {
+      if (pre == GPIO_PIN_SET && cur == GPIO_PIN_RESET)
+      {
+        s = 1;
+        tim = 1000;
+      }
+    }
+    else if (s == 1)
+    {
+      if (pre == GPIO_PIN_RESET && cur == GPIO_PIN_SET)
+      {
+        KEY_Flag[3] = 1;
+        tim = 0;
+        s = 0;
+      }
+      else if (tim == 0)
+      {
+        KEY_Flag[4] = !KEY_Flag[4];
+        HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_RESET);
+        s = 0;
+      }
+      
+    }
+  }
+}
+
+void LED_Tick(void)
+{
+  static uint16_t num;
+  num++;
+  if (num > 200)
+  {
+    HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+    num = 0;
+  }
+}
 
 /* USER CODE END 1 */
 
