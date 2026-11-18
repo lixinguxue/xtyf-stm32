@@ -171,7 +171,7 @@ void LED_Tick(void)
 {
   static uint16_t num;
   num++;
-  if (num > 200)
+  if (num > 250)
   {
     HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
     num = 0;
