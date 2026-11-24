@@ -59,7 +59,7 @@ void SystemClock_Config(void);
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
   a = HAL_ADC_GetValue(&hadc1);
-  cmp = 50+a/20;
+  cmp = 500+a/2;
   __HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_2,cmp);
 }
 /* USER CODE END 0 */

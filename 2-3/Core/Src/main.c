@@ -45,6 +45,7 @@
 
 /* USER CODE BEGIN PV */
 volatile uint16_t c;
+double e = 0.0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,6 +99,7 @@ int main(void)
   while (1)
   {
     c = HAL_ADC_GetValue(&hadc1);
+    e = c *3.3/4095;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -44,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint16_t cmp = 50;
+uint32_t cmp = 50;
 uint8_t Flag;
 /* USER CODE END PV */
 
@@ -60,29 +60,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM2)
   {
-    static uint16_t cnt;
-    cnt++;
-    if (cnt >= 10)
-    {
-      cnt = 0;
       if (Flag == 0)
       {
-        cmp = cmp +2;
+        cmp = cmp + 20;
       }
       else if (Flag == 1)
       {
-        cmp = cmp - 2;
+        cmp = cmp -  20;
       }
-      if (cmp >= 250)
+      if (cmp >= 2500)
       {
         Flag = 1;
       }
-      if (cmp <= 50)
+      if (cmp <= 500)
       {
         Flag = 0;
       }
       __HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_1,cmp);
-    }
   }
 }
 /* USER CODE END 0 */
@@ -120,6 +114,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+  cmp = 1000;
   /* USER CODE END 2 */
 
   /* Infinite loop */
